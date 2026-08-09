@@ -15,8 +15,91 @@
 <main class="plate">
 <div class="masthead"><p class="eyebrow">Sandy Park QR Quest</p><p class="count"><b>Clue 7</b> of 7</p></div>
 <p class="clue"><span>You've followed the clues, now finish the game,</span><span>Unscramble the letters to reveal its name.</span></p>
-<div class="token"><div class="slots"><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div></div></div>
+<div class="token"><div class="slots" id="slots"><input class="slot" id="s0" type="text" inputmode="text" maxlength="1" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="characters" aria-label="Letter 1 of 6"><input class="slot" id="s1" type="text" inputmode="text" maxlength="1" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="characters" aria-label="Letter 2 of 6"><input class="slot" id="s2" type="text" inputmode="text" maxlength="1" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="characters" aria-label="Letter 3 of 6"><input class="slot" id="s3" type="text" inputmode="text" maxlength="1" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="characters" aria-label="Letter 4 of 6"><input class="slot" id="s4" type="text" inputmode="text" maxlength="1" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="characters" aria-label="Letter 5 of 6"><input class="slot" id="s5" type="text" inputmode="text" maxlength="1" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="characters" aria-label="Letter 6 of 6"></div><button class="check" id="check" type="button">Check answer</button><p class="verdict" id="verdict" role="status" aria-live="polite"></p></div>
 <nav><a href="../zzg/">&larr; Back to clue 6</a></nav>
 </main>
+<canvas id="confetti" aria-hidden="true"></canvas>
+<script>
+(function(){
+  var TARGET="18732ea813bec6cbde63142ab9cea469421725b09e64b133f2090713b4e63c19";
+  var boxes=[].slice.call(document.querySelectorAll(".slot"));
+  var slots=document.getElementById("slots");
+  var verdict=document.getElementById("verdict");
+  var solved=false;
+
+  boxes.forEach(function(box,i){
+    box.addEventListener("input",function(){
+      box.value=box.value.replace(/[^a-zA-Z]/g,"").toUpperCase().slice(0,1);
+      if(box.value&&i<boxes.length-1)boxes[i+1].focus();
+      say("","");
+    });
+    box.addEventListener("keydown",function(e){
+      if(e.key==="Backspace"&&!box.value&&i>0){boxes[i-1].focus();boxes[i-1].value="";e.preventDefault();}
+      if(e.key==="ArrowLeft"&&i>0)boxes[i-1].focus();
+      if(e.key==="ArrowRight"&&i<boxes.length-1)boxes[i+1].focus();
+      if(e.key==="Enter")check();
+    });
+    box.addEventListener("focus",function(){box.select();});
+    box.addEventListener("paste",function(e){
+      var t=(e.clipboardData||window.clipboardData).getData("text")||"";
+      t=t.replace(/[^a-zA-Z]/g,"").toUpperCase();
+      if(!t)return;
+      e.preventDefault();
+      for(var k=0;k+i<boxes.length&&k<t.length;k++)boxes[i+k].value=t[k];
+      boxes[Math.min(i+t.length,boxes.length-1)].focus();
+    });
+  });
+
+  function say(msg,cls){verdict.textContent=msg;verdict.className="verdict"+(cls?" "+cls:"");}
+
+  async function check(){
+    if(solved)return;
+    var guess=boxes.map(function(b){return b.value;}).join("").toUpperCase();
+    if(guess.length<boxes.length){say("Fill in all the boxes","");boxes[guess.length].focus();return;}
+    var buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(guess));
+    var hex=[].map.call(new Uint8Array(buf),function(b){return b.toString(16).padStart(2,"0");}).join("");
+    if(hex===TARGET){
+      solved=true;
+      say("That's it. Well played.","ok");
+      boxes.forEach(function(b){b.readOnly=true;});
+      document.getElementById("check").disabled=true;
+      celebrate();
+    }else{
+      say("Not quite. Try another order.","no");
+      slots.classList.remove("wrong");void slots.offsetWidth;slots.classList.add("wrong");
+    }
+  }
+  document.getElementById("check").addEventListener("click",check);
+
+  function celebrate(){
+    if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+    var c=document.getElementById("confetti"),x=c.getContext("2d"),dpr=window.devicePixelRatio||1;
+    function size(){c.width=innerWidth*dpr;c.height=innerHeight*dpr;x.setTransform(dpr,0,0,dpr,0,0);}
+    size();addEventListener("resize",size);
+    var colours=["#C4122F","#12171D","#137A46","#E8B417","#FAFAF6"],bits=[];
+    for(var i=0;i<130;i++)bits.push({
+      x:Math.random()*innerWidth,
+      y:-20-Math.random()*innerHeight*0.6,
+      w:5+Math.random()*6,h:8+Math.random()*8,
+      vy:2.2+Math.random()*2.8,vx:-1.2+Math.random()*2.4,
+      a:Math.random()*Math.PI,va:-0.12+Math.random()*0.24,
+      col:colours[(Math.random()*colours.length)|0]
+    });
+    var start=performance.now();
+    (function frame(now){
+      var life=now-start;
+      x.clearRect(0,0,innerWidth,innerHeight);
+      bits.forEach(function(b){
+        b.x+=b.vx;b.y+=b.vy;b.a+=b.va;b.vy+=0.012;
+        x.save();x.translate(b.x,b.y);x.rotate(b.a);
+        x.globalAlpha=life>3200?Math.max(0,1-(life-3200)/900):1;
+        x.fillStyle=b.col;x.fillRect(-b.w/2,-b.h/2,b.w,b.h);x.restore();
+      });
+      if(life<4100)requestAnimationFrame(frame);
+      else{x.clearRect(0,0,innerWidth,innerHeight);c.remove();}
+    })(start);
+  }
+})();
+</script>
 </body>
 </html>

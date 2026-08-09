@@ -132,3 +132,57 @@ nav a:focus-visible{outline:2px solid var(--pillar);outline-offset:4px;border-ra
 @media (prefers-reduced-motion:reduce){
   .disc{animation:none}
 }
+
+/* --- final clue: interactive answer entry --- */
+input.slot{
+  font-family:"Archivo",system-ui,sans-serif;
+  font-weight:800;
+  font-size:clamp(1.15rem,5.5vw,1.55rem);
+  line-height:1;
+  text-align:center;
+  text-transform:uppercase;
+  color:var(--ink);
+  padding:0;
+  -webkit-appearance:none;
+  appearance:none;
+}
+input.slot:focus{outline:none;border-color:var(--pillar);box-shadow:0 0 0 2px rgba(196,18,47,.22)}
+.check{
+  display:block;
+  margin:1.35rem auto 0;
+  font-family:"Archivo",system-ui,sans-serif;
+  font-weight:600;
+  font-size:.76rem;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--enamel);
+  background:var(--ink);
+  border:2px solid var(--ink);
+  border-radius:3px;
+  padding:.72rem 1.5rem;
+  cursor:pointer;
+}
+.check:hover{background:var(--pillar);border-color:var(--pillar)}
+.check:focus-visible{outline:2px solid var(--pillar);outline-offset:3px}
+.verdict{
+  font-family:"Archivo",system-ui,sans-serif;
+  font-size:.78rem;
+  font-weight:600;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  min-height:1.5em;
+  margin:.95rem 0 0;
+  color:var(--quiet);
+}
+.verdict.ok{color:#137A46}
+.verdict.no{color:var(--pillar)}
+.slots.wrong{animation:shake .4s ease}
+@keyframes shake{
+  10%,90%{transform:translateX(-2px)}
+  30%,70%{transform:translateX(4px)}
+  50%{transform:translateX(-4px)}
+}
+#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9}
+@media (prefers-reduced-motion:reduce){
+  .slots.wrong{animation:none}
+}
