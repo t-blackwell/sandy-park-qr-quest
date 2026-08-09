@@ -78,8 +78,8 @@ body{
 .clue span{display:block}
 .token{text-align:center}
 .disc{
-  width:7.5rem;
-  height:7.5rem;
+  width:6.2rem;
+  height:6.2rem;
   margin:0 auto;
   border-radius:50%;
   background:var(--pillar);
@@ -88,7 +88,7 @@ body{
   place-items:center;
   font-family:"Archivo",system-ui,sans-serif;
   font-weight:800;
-  font-size:3.6rem;
+  font-size:2.95rem;
   line-height:1;
   box-shadow:inset 0 0 0 3px var(--enamel), inset 0 0 0 5px rgba(255,255,255,.35), 0 10px 22px -16px rgba(196,18,47,.9);
   animation:settle .55s cubic-bezier(.2,.9,.3,1.15) both;
