@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;800&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/style.css?v=2">
 </head>
 <body>
 <main class="plate">
@@ -18,7 +18,6 @@
 <div class="token"><div class="slots" id="slots"><input class="slot" id="s0" type="text" inputmode="text" maxlength="1" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="characters" aria-label="Letter 1 of 6"><input class="slot" id="s1" type="text" inputmode="text" maxlength="1" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="characters" aria-label="Letter 2 of 6"><input class="slot" id="s2" type="text" inputmode="text" maxlength="1" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="characters" aria-label="Letter 3 of 6"><input class="slot" id="s3" type="text" inputmode="text" maxlength="1" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="characters" aria-label="Letter 4 of 6"><input class="slot" id="s4" type="text" inputmode="text" maxlength="1" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="characters" aria-label="Letter 5 of 6"><input class="slot" id="s5" type="text" inputmode="text" maxlength="1" autocomplete="off" autocorrect="off" spellcheck="false" autocapitalize="characters" aria-label="Letter 6 of 6"></div><button class="check" id="check" type="button">Check answer</button><p class="verdict" id="verdict" role="status" aria-live="polite"></p></div>
 <nav><a href="../zzg/">&larr; Back to clue 6</a></nav>
 </main>
-<canvas id="confetti" aria-hidden="true"></canvas>
 <script>
 (function(){
   var TARGET="18732ea813bec6cbde63142ab9cea469421725b09e64b133f2090713b4e63c19";
@@ -73,7 +72,11 @@
 
   function celebrate(){
     if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
-    var c=document.getElementById("confetti"),x=c.getContext("2d"),dpr=window.devicePixelRatio||1;
+    var c=document.createElement("canvas");
+    c.setAttribute("aria-hidden","true");
+    c.style.cssText="position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:9";
+    document.body.appendChild(c);
+    var x=c.getContext("2d"),dpr=window.devicePixelRatio||1;
     function size(){c.width=innerWidth*dpr;c.height=innerHeight*dpr;x.setTransform(dpr,0,0,dpr,0,0);}
     size();addEventListener("resize",size);
     var colours=["#C4122F","#12171D","#137A46","#E8B417","#FAFAF6"],bits=[];
