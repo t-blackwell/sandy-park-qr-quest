@@ -147,6 +147,13 @@ input.slot{
   appearance:none;
 }
 input.slot:focus{outline:none;border-color:var(--pillar);box-shadow:0 0 0 2px rgba(196,18,47,.22)}
+input.slot.solved,
+input.slot.solved:focus{
+  border-color:#137A46;
+  background:#DDEFE3;
+  color:#0E5C34;
+  box-shadow:none;
+}
 .check{
   display:block;
   margin:1.35rem auto 0;
